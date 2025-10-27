@@ -3,8 +3,7 @@ require('dotenv').config();
 
 const pool = new Pool({
 connectionString: process.env.DATABASE_URL,
-// If using Heroku, enable ssl connect like below (only if needed)
-// ssl: { rejectUnauthorized: false }
+
 });
 
 module.exports = {
