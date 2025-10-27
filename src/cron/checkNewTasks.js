@@ -3,7 +3,7 @@ const db = require('../db');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-// create transporter using env settings (Mailtrap or SMTP)
+
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 async function checkNewTasksAndNotify() {
     try {
-    // find tasks created in the last 5 minutes
+    
     const result = await db.query(`SELECT * FROM tasks WHERE created_at >= now() - interval '5 minutes' ORDER BY created_at DESC`);
         if (result.rows.length === 0) {
         console.log('[cron] No new tasks in the last 5 minutes');
@@ -26,7 +26,7 @@ async function checkNewTasksAndNotify() {
     const subject = `You have ${tasks.length} new task(s)`;
     const text = tasks.map(t => `- ${t.title} (id: ${t.id}) (desc ${t.description})`).join('\n');
 
-    // send email
+   
     const mailOptions = {
         from: process.env.FROM_EMAIL,
         to: process.env.TO_EMAIL,
@@ -34,7 +34,7 @@ async function checkNewTasksAndNotify() {
         text,
     };
 
-    // If email fails, we still log the event
+   
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
         console.error('[cron] Error sending mail:', err);
@@ -49,7 +49,7 @@ async function checkNewTasksAndNotify() {
     }
 }
 
-// Schedule: every 5 minutes
+
 const job = cron.schedule('*/5 * * * *', () => {
     console.log('[cron] Running check for new tasks...');
     checkNewTasksAndNotify();
