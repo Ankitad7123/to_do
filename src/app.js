@@ -19,7 +19,7 @@ console.log(`Server listening on port ${port}`);
 job.start();
 });
 
-// Basic health-check route to check DB connection
+
 app.get('/health', async (req, res) => {
 try {
 const r = await db.query('SELECT 1');
